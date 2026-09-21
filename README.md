@@ -1,11 +1,11 @@
-# REOP 2026
+# Operations research course 2026
 
 Hello and welcome to the website for the Operations Research course taught by [Axel Parmentier](https://axelparmentier.github.io/) at École nationale des ponts et chaussées over the school year 2026-2027.
 Here you will find material specific to [Guillaume Dalle](https://gdalle.github.io/)'s group.
 
 ## Class notes
 
-- Week 1: [Introduction to operations research](notes/W1.pdf)
+- Week 1: [Introduction to operations research](notes/W01.pdf)
 
 ## Additional resources
 
