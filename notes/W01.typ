@@ -52,12 +52,22 @@ You can also come visit me in room A409 of the Bienvenüe building at École des
 
 == LLM policy
 
-LLMs are amazing tools but learning requires friction.
-If you don't understand the ideas/math/code, you won't be able to supervise a robot doing the ideas/math/code.
+My two golden rules are the following:
 
-My golden rule: interactions between humans (e.g. emails) should be written by humans.
-In class: there is absolutely no reason to use LLMs, you have me! If you would rather ask a chatbot, then I'm doing something wrong and I need to fix it.
-At home: use them _if you want_ to further your understanding or assist with the project, but make sure this does not threaten your skill-building.
+1. Don't use an LLM to mediate or replace communication with a human.
+2. Don't use an LLM in a way that threatens your skill-building.
+
+About rule 1: the goal of the class is not just to impart knowledge, but to communicate some of the passion and excitement I feel about the subject.
+There is a community aspect to mathematics which is precious to me, and I want to encourage it by fostering live interactions with students.
+That is also why I chose to teach on the blackboard, instead of presenting slides.
+Thus, when we're together in class, there should be no reason to ask an LLM: I would much rather have you ask me whenever something is unclear.
+And if you send me an LLM-written email, I won't even bother reading it.
+
+About rule 2: LLMs have become impressive tools for science, but learning requires friction.
+If you don't work to understand the ideas/math/code presented here, you won't even be able to supervise a robot doing the ideas/math/code.
+Therefore, no part of this course will _require_ LLM assistance, because the priority is building _your_ skills.
+At home, you may still use an LLM _if you want_, to further your understanding or assist with the project.
+Then it becomes your responsibility to ensure that (a) you understand the entire output and (b) given enough time, you could have obtained the same result yourself.
 
 == Grading
 
