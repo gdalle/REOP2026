@@ -61,7 +61,7 @@ About rule 1: the goal of the class is not just to impart knowledge, but to comm
 There is a community aspect to mathematics which is precious to me, and I want to encourage it by fostering live interactions with students.
 That is also why I chose to teach on the blackboard, instead of presenting slides.
 Thus, when we're together in class, there should be no reason to ask an LLM: I would much rather have you ask me whenever something is unclear.
-And if you send me an LLM-written email, I won't even bother reading it.
+Likewise, I will only write emails with my own words, and I expect the same in return.
 
 About rule 2: LLMs have become impressive tools for science, but learning requires friction.
 If you don't work to understand the ideas/math/code presented here, you won't even be able to supervise a robot doing the ideas/math/code.
