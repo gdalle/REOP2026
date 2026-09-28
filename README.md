@@ -1,6 +1,6 @@
 # Operations research course 2026
 
-Hello and welcome to the website for the Operations Research course taught by [Axel Parmentier](https://axelparmentier.github.io/) at École nationale des ponts et chaussées over the school year 2026-2027.
+Hello and welcome to the website for the [Operations Research course](https://educnet.enpc.fr/course/view.php?id=1215) taught by [Axel Parmentier](https://axelparmentier.github.io/) at École nationale des ponts et chaussées over the school year 2026-2027.
 Here you will find material specific to [Guillaume Dalle](https://gdalle.github.io/)'s group.
 
 ## Class notes

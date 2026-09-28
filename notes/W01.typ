@@ -69,11 +69,6 @@ Therefore, no part of this course will _require_ LLM assistance, because the pri
 At home, you may still use an LLM _if you want_, to further your understanding or assist with the project.
 Then it becomes your responsibility to ensure that (a) you understand the entire output and (b) given enough time, you could have obtained the same result yourself.
 
-== Grading
-
-- 50%: in-class written exam (pen and paper)
-- 50%: oral presentation of your work during the class project (no written report)
-
 = Basics of optimization
 
 == Problems
@@ -117,10 +112,6 @@ Typical algorithm: given the current solution $x_k$
 
 How to evaluate the quality of a solution without a certificate of optimality? Compare its value $c(x)$ with a lower bound $ell <= op("val")(P) <= c(x)$
 
-== Goals of the class
-
-TBD
-
 = Basics of graph theory
 
 == Vocabulary
@@ -162,7 +153,7 @@ A path is a sequence of nodes linked by edges. Types of paths:
 
 A graph is eulerian iff all its vertices have even degree (i.e. an even number of incident edges).
 
-_Exercise 3.5: criterion for Eulerian graphs._
+_Exercise 3.5 (Homework): prove the criterion for Eulerian graphs._
 
 == Zoo of graph problems
 
@@ -172,7 +163,7 @@ A coloring is a function $c: V -> NN$ such that two adjacent vertices do not sha
 
 A clique is a complete subgraph. The maximum cardinality of a clique is denoted by $omega(G)$.
 
-We have $omega(G) <= chi(G)$.
+_Exercise 3.12 (Homework): show that $omega(G) <= chi(G)$._
 
 === Matchings and covers
 
@@ -180,7 +171,7 @@ A matching is a set of disjoint edges (maximum cadinality $nu(G)$).
 
 A vertex cover is a set of vertices that covers (has a member belonging to) every edge (minimum cardinality $tau(G)$).
 
-We have $nu(G) <= tau(G)$.
+_Exercise 3.9 (Homework): show that $nu(G) <= tau(G)$._
 
 === Stable sets and edge covers
 
@@ -188,9 +179,9 @@ A stable set is a set of vertices such that no two of them are linked to each ot
 
 An edge cover is a set of edges that covers (has a member incident to) every vertex (minimum cardinality $rho(G)$).
 
-We have $alpha(G) <= rho(G)$.
+_Exercise 3.9: show that $alpha(G) <= rho(G)$._
 
-_Exercise 3.10: stable sets and vertex covers._
+_Exercise 3.10: find a connection between stable sets and vertex covers, using the notion of graph complement._
 
 = MILP modeling
 
@@ -207,3 +198,5 @@ However:
 
 - they are very useful to model lots of real-life problems
 - there are practically efficient solvers that can handle millions of variables if the problem has a certain structure
+
+_Exercise (Homework): model the coloring problem as an ILP._
