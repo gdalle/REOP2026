@@ -12,6 +12,8 @@
   justify: true,
 )
 
+#set quote(block: true)
+
 #set page(numbering: "1")
 
 #set math.equation(numbering: "(1)")
@@ -33,11 +35,45 @@
 
 == Eulerian graphs
 
-== Cliques and colorings
+_Exercise 3.5: prove the criterion for Eulerian graphs._
+
+If $G$ is a Eulerian graph, then it has a Eulerian cycle (containing every edge exactly once). Each vertex $v$ appears in this cycle a certain number $k_v >= 1$ of times (not $0$). This means that $deg(v) = 2k_v$.
+
+If every vertex has even degree, we can construct a Eulerian cycle. Start from any vertex $v_1$ and iteratively pick uncrossed edges until you are stuck. You will necessarily be stuck in $v_1$ again because the even degree of the vertices implies that for every way in there is a way out. If there is a vertex $v_2$ on the cycle that has uncrossed incident edges, start a new cycle from $v_2$ and join it with the previous one. This allows us to cross all edges of the connected component.
 
 == Matchings and vertex covers
 
+_Exercise 3.9: show that $nu(G) <= tau(G)$._
+
+Let $M subset.eq$ be a maximum matching and $C subset.eq V$ be a minimum vertex cover.
+For each edge $e in M$, pick one vertex $v in C$ such that $e$ is incident to $v$. Such a vertex exists because $C$ is a vertex cover.
+Two edges $e' != e$ in $M$ are disjoint because $M$ is a matching.
+Therefore, the mapping $e in M mapsto v in C$ we defined is injective, and $nu(G) = |M| <= |C| = tau(G)$.
+
+== Cliques and colorings
+
+_Exercise 3.12: show that $omega(G) <= chi(G)$._
+
+Let $K$ be a clique in $G$ with size $k$.
+In any feasible coloring, the vertices of the clique must get different colors, so we need at least $k$ colors.
+Therefore, $omega(G) <= chi(G)$.
+
 == ILP formulation of coloring
+
+_Exercise: model the coloring problem as an ILP._
+
+Assume that the coloring of $G = (V, E)$ requires at most $p$ colors:
+$
+  min_(x, y) sum_(c=1)^p y_c quad "s.t." quad cases(
+    sum_(c=1)^p x_(v, c) = 1 quad forall v in V,
+    x_(u, c) + x_(v, c) <= 1 quad forall (u, v) in E quad forall c in [1, p],
+    sum_(v in V) x_(v, c) <= y_c quad forall c in [1, p],
+    x_(v, c) in {0, 1} quad forall v in V quad forall c in [1, p],
+    y_c in {0, 1} quad forall c in [1, p]
+  )
+$
+
+Based on the previous exercise, can we add inequalities?
 
 = Shortest path problem
 
@@ -54,7 +90,7 @@ In cases where the problem is not well-defined (example: all weights are negativ
 == ILP formulation
 
 Let $x_(u,v)$ be a binary variable equal to $1$ if edge $(u, v)$ is part of the path we choose, and $0$ otherwise.
-The shortest _elementary_ path problem can be stated as:
+The shortest _simple_ path problem can be stated as:
 
 $ min_x sum_((u,v) in A) c(u, v) x_(u,v) quad "s.t." quad x in {0, 1}^A "defines an" o -> d "path" $
 
@@ -68,10 +104,8 @@ $
 
 *Theorem*: The shortest path problem is NP-complete in the general case.
 
-*Proof*:
-
-- Reduction from Hamiltonian path to longest simple path
-- Reduction from longest simple path to shortest simple path
+_Proof:_ Reduction from Hamiltonian path to longest simple path, then from longest simple path to shortest simple path.
+#h(1fr) $qed$
 
 *Polynomial cases*:
 
@@ -108,89 +142,97 @@ $
 - Multi-criteria shortest paths
 - Shortest paths on transportation networks: timed trips, multiple modes
 
-_Exercise 5.12: disjoint intervals and profitable rentals._
+_Exercise 5.12: Consider a finite collection $C$ of intervals on the real line, each associated with a weight. (1) Show that there is a polynomial algorithm to find the subset of mutually disjoint intervals of $C$ which has maximum weight. (2) How does this help you manage an AirBNB rental?_
 
 = Dynamic programming
 
 == Bellman's principle
 
-_A subtrajectory of an optimal trajectory is itself optimal._
+A subtrajectory of an optimal trajectory is itself optimal.
 
 Generalize the problem to derive a recursion called the Bellman equation. Usually done by changing the bounds or adding parameters.
 
-Knapsack example $=>$ IP formulation, DP algorithm.
+First compute the value of a solution. It is often easy to go back to the minimizer by working your way backwards.
 
-First compute the value of a solution. It is usually easy to go back to the minimizer by working your way backwards.
+== Example: the knapsack problem
+
+You have $n$ items, each with an integer weight $w_i$ and a value $v_i$.
+You want to select a subset of them to put in your knapsack of integer capacity $c$, to maximize the value inside.
+
+This can formulated as an ILP:
+
+$ max_x sum_(i=1)^n v_i x_i quad "s.t." quad sum_(i=1)^n w_i x_i <= c $
+
+To apply dynamic programming, we define the "value function" $V(c, n)$ as the maximum value of a knapsack considering the first $n$ items with capacity $c$.
+It satisfies the recursion:
+
+$ V(c, n) = max {V(c, n-1), V(c-w_n, n-1) + v_n} $
+
+We can compute it by filling a 2-dimensional table in $(c, n)$.
+
+_Exercise: How do we recover an optimal subset of items?_
 
 == Bellman-Ford
 
-Applies to directed graphs without absorbing cycles.
+The Bellman-Ford algorithm is dynamic programming applied to directed graphs without absorbing cycles.
 
-*Proposition 5.2*:
+*Proposition*: Let $P$ be an $o -> v$ path with $k$ arcs, ending with arc $(u, v)$, and $Q$ be the subpath of $P$ where the last vertex has been removed. If $P$ is a shortest $o -> v$ path among those with $k$ arcs, then $Q$ is a shortest $o -> u$ path among those with $k-1$ arcs.
 
-Let $P$ be an $o -> v$ path with $k$ arcs and $Q$ be an $o -> u$ path, where $u$ is the vertex before $v$ on $P$. If $P$ is a shortest $o -> v$ path among those with $k$ arcs, then $Q$ is a shortest $o -> u$ path among those with $k-1$ arcs.
+_Proof:_
+Suppose there is another $o -> u$ path $Q'$ with $k-1$ arcs such that $c(Q') < c(Q)$.
+Then $P' = Q' union (u, v)$ is an $o -> v$ path with $k$ arcs.
+Furthermore, $P'$ has a cost $c(P') = c(Q') + c(u, v) < c(Q) + c(u, v) = c(P)$.
+#h(1fr) $qed$
 
-*Proof*:
+The length of a shortest $o -> v$ path satisfies the *Bellman equation*
 
-- Suppose there is another $o -> u$ path $Q'$ with $k-1$ arcs such that $c(Q') < c(Q)$.
-- $P' = Q' union (u, v)$ is an $o -> v$ path with $k$ arcs.
-- $P'$ has a cost $c(P') = c(Q') + c(u, v) < c(Q) + c(u, v) = c(P)$.
-
-The length of a shortest $o -> v$ path satisfies the Bellman equation
-
-$ c(v, k) = min_(u in N^-(v)) c(u, k-1) + c(u, v) $
+$ ell(v, k) = min {V(u, k-1) + c(u, v): u in delta^-(v)} $
 
 with initial conditions
 
-$ c(v, 0) = cases(0 "if" v = o, -infinity "otherwise") $
+$ ell(v, 0) = cases(0 "if" v = o, -infinity "otherwise") $
 
-We can compute its values starting from $k=0$. But when do we stop? Since $D$ has no negative cycles, there is a simple shortest path of length at most $n-1$. We compute $c(v, k)$ for all $v in V$ and $k in [0, n]$, and then pick $k$ minimizing $c(d, k)$.
+We can compute its values starting from $k=0$. But when do we stop? Since $D$ has no negative cycles, there is a simple shortest path of length at most $n-1$. We compute $ell(v, k)$ for all $v in V$ and $k in [0, n]$, and then pick $k$ minimizing $ell(d, k)$.
 
 By remembering, for each $v$, the in-neighbor $u$ that achieved the minimum, we can build a shortest-path tree.
 
 == Topological sorting
 
-Applies to Directed Acyclic Graphs (DAGs).
+A simpler dynamic programmign works for Directed Acyclic Graphs (DAGs).
 
-*Proposition 5.4*:
+*Proposition:*
+Let $D$ be a DAG, $P$ be an $o -> v$ path ending with edge $(u,v)$, and $Q$ be the subpath of $P$ where the last vertex has been removed. If $P$ is a shortest $o -> v$ path, then $Q$ is a shortest $o -> u$ path.
 
-Let $D$ be a DAG, $P$ be an $o -> v$ path ending with edge $(u,v)$, and $Q$ be an $o -> u$ path. If $P$ is a shortest $o -> v$ path, then $Q$ is a shortest $o -> u$ path.
+_Proof:_
+Suppose there is another $o -> u$ path $Q'$ such that $c(Q') < c(Q)$.
+Then $P' = Q' union (u, v)$ is an $o -> v$ path.
+Furthermore, $P'$ has a cost $c(P') = c(Q') + c(u, v) < c(Q) + c(u, v) = c(P)$.
+#h(1fr) $qed$
 
-*Proof*:
+The length of a shortest $o -> v$ path satisfies the *Bellman equation*
 
-- Suppose there is another $o -> u$ path $Q'$ such that $c(Q') < c(Q)$.
-- $P' = Q' union (u, v)$ is an $o -> v$ path.
-- $P'$ has a cost $c(P') = c(Q') + c(u, v) < c(Q) + c(u, v) = c(P)$.
+$ ell(v) = min {ell(u) + c(u, v) : u in delta^-(v)} quad "and" quad ell(o) = 0 $
 
-*Recursive equation*
+Problem: in which order do we enumerate the vertices? The constraint is that we must compute $ell(u)$ before $ell(v)$ if there is an edge $(u, v)$ in $A$.
 
-The length of a shortest $o -> v$ path satisfies the Bellman equation
-
-$ c(v) = min_(u in N^-(v)) c(u) + c(u, v) quad "and" quad c(o) = 0 $
-
-*Problem*: in which order do we enumerate the vertices? The constraint is that we must compute $c(u)$ before $c(v)$ if there is an edge $(u, v)$ in $A$.
-
+*Proposition:*
 A digraph $D = (V, A)$ is acyclic iff there exists a total order $prec.eq$ (i.e. a numbering of the vertices) such that $(u, v) in A => u prec.eq v$.
 
-We define the operation $op("DFS")(v)$ (Depth-First Search) as follows:
-
-+ open $v$ (put in $S$)
-+ scan its children
-+ close $v$ (put in $L$)
-
-This recursive definition is consistent since the graph has no cycles.
-
-If we add a dummy vertex which has all the "orphan" nodes as children, we can consider the case with only one orphan node $o$. Then, this procedure is equivalent to applying $op("DFS")(o)$.
-
-Reversing the order in which vertices are closed yields a topological sort, since children are always closed before their parents.
+_Proof:_
+Apply Depth-First Search from all vertices without parents.
+#h(1fr) $qed$
 
 == Markov Decision Processes
 
-= The case of positive weights
+See polycopié, or on the board if we have time.
+
+= The case of non-negative weights
+
+#quote(attribution: [Edsger Dijkstra])[
+  `What is the shortest way to travel from Rotterdam to Groningen, in general: from given city to given city. It is the algorithm for the shortest path, which I designed in about twenty minutes. One morning I was shopping in Amsterdam with my young fiancée, and tired, we sat down on the café terrace to drink a cup of coffee and I was just thinking about whether I could do this, and I then designed the algorithm for the shortest path. As I said, it was a twenty-minute invention. In fact, it was published in '59, three years later. The publication is still readable, it is, in fact, quite nice. One of the reasons that it is so nice was that I designed it without pencil and paper. I learned later that one of the advantages of designing without pencil and paper is that you are almost forced to avoid all avoidable complexities. Eventually, that algorithm became to my great amazement, one of the cornerstones of my fame.`
+]
 
 == Dijkstra's algorithm
-
-*Pseudocode*:
 
 Input: a digraph $D = (V, A)$ and costs $c in QQ_+^A$.
 
@@ -199,27 +241,24 @@ Input: a digraph $D = (V, A)$ and costs $c in QQ_+^A$.
 + While $V without U eq.not emptyset$:
   + Choose $v in V without U$ such that $lambda(v) = min_(v' in V without U) lambda(v')$ (choose the closest unvisited vertex according to the label)
   + Add $v$ to $U$ (visit it)
-  + Set $lambda(w) = min{lambda(w), lambda(v) + c(v, w)}$ for all $w in N^+(v)$ (update neighbor labels)
+  + Set $lambda(w) = min{lambda(w), lambda(v) + c(v, w)}$ for all $w in delta^+(v)$ (update neighbor labels)
 
 Output: the vector $lambda$ which contains all distances $o -> v$
 
-*Proposition*: (Values of the tentative distance)
+*Proposition*: $lambda$ represents a tentative distance estimate:
 
-- For all $u in U$, $lambda(u) = c(u)$
-- For all $w in V without U$, $lambda(w) = min_(u in U) c(u) + c(u, w) >= c(w)$
+- For all $u in U$, $lambda(u) = ell(u)$
+- For all $w in V without U$, $lambda(w) = min_(u in U) ell(u) + c(u, w) >= c(w)$
 
-*Proof*: Make a drawing!
+_Proof:_ Make a drawing!
 
 Since they hold after initialization, we must only check that these properties are preserved by the loop.
-
 Let $v$ be the closest vertex according to the tentative distance, i.e. the one achieving $min_(v' in V without U) lambda(v')$.
-By property 2, $lambda(v) = min_(u in U) c(u) + c(u, v')$, so let $u$ be the minimizer there.
-
+By the second property, $lambda(v) = min_(u in U) ell(u) + c(u, v')$, so let $u$ be the minimizer there.
 Consider any other path from $o$ to $v$. Let $v'$ be its first vertex outside of $U$, and $u'$ the one before that.
-
-The path $o ~> u ~> v$ has cost $c(u) + c(u, v) = lambda(v)$. The path $o ~> u' ~> v'$ has cost $c(u') + c(u', v') = lambda(v') >= lambda(v)$. The remaining path $v' ~> v$ has strictly positive cost. Hence $o ~> v' ~> v$ is not better.
-
-Therefore, $lambda(v) = c(v)$ and the first property is preserved. The second property is easier to verify.
+The path $o ~> u ~> v$ has cost $ell(u) + c(u, v) = lambda(v)$. The path $o ~> u' ~> v'$ has cost $ell(u') + c(u', v') = lambda(v') >= lambda(v)$. The remaining path $v' ~> v$ has non-negative cost because $c >= 0$. Hence $o ~> v' ~> v$ is not strictly better.
+Therefore, $lambda(v) = ell(v)$ and the first property is preserved. The second property is easier to verify.
+#h(1fr) $qed$
 
 == A\* algorithm
 
@@ -227,12 +266,12 @@ Idea: speed up Dijkstra using a heuristic $h(v)$ to lower-bound the remaining di
 
 Procedure: grow a set of paths and trim the ones that are hopeless.
 
-Special case of Branch & Bound and LP duality.
+Special case of Branch & Bound and LP duality (see later classes).
 
-Essential in transportation networks because the graphs are large but we have an idea of where to go.
+Essential in transportation networks because the graphs are large but we have a geographical idea of where to go.
 
 = Exercises
 
-_Exercise 5.19: longest common subword_
+_Exercise 5.19: Consider two words $w_1$ and $w_2$ (sequences of symbols) on the same alphabet. A subword is an increasing subsequence (not necessarily contiguous) of a word. Give a polynomial algorithm to find the longuest common subword of $w_1$ and $w_2$, and describe its complexity as a function of the lengths $n_1$ and $n_2$._
 
-_Exercise 5.20: Held-Karp algorithm for the TSP_
+_Exercise 5.20: Suggest a dynamic programming algorithm for the Traveling Salesperson Problem, with time complexity $O(n^2 2^n)$._
