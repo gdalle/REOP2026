@@ -7,6 +7,7 @@ Here you will find material specific to [Guillaume Dalle](https://gdalle.github.
 
 - Week 1: [Introduction to operations research](notes/W01.pdf)
 - Week 2: [Shortest paths](notes/W02.pdf)
+- Week 3: [Flows](notes/W03.pdf)
 
 ## Additional resources
 
