@@ -15,16 +15,16 @@ Here you will find material specific to [Guillaume Dalle](https://gdalle.github.
 
 ### Introductory books
 
-- Bona, M. (2016), *[A Walk Through Combinatorics: An Introduction To Enumeration And Graph Theory](https://www.microlinkcolleges.net/elib/files/undergraduate/Mathematics/A%20Walk%20Through%20Combinatorics%20An%20Introduction%20to%20Enumeration%20and%20Graph%20Theory.pdf)*
-- Williams, H. P. (2013), *[Model Building in Mathematical Programming](http://pourghaderi.com/wp-content/uploads/2018/12/Wiliams-Model-Building-in-Mathematical-Programming-5th-2013.pdf)*
+- Bona, M. (2016), *A Walk Through Combinatorics: An Introduction To Enumeration And Graph Theory*
+- Williams, H. P. (2013), *[Model Building in Mathematical Programming](https://math.bme.hu/~pfeiferd/orpl/H.%20Paul%20Williams%20Model%20Building%20in%20Mathematical%20Programming.pdf)*
 - Matousek, J., and Gärtner, B. (2007), *[Understanding and Using Linear Programming](https://blogs.epfl.ch/extrema/documents/Maison%2020.05.10.pdf)*
 - Cook, W. J. (2012), *In Pursuit of the Traveling Salesman: Mathematics at the Limits of Computation*
 
 ### Advanced books
 
-- Conforti, M., Cornuéjols, G., and Zambelli, G. (2014), *[Integer Programming](https://solab.kaist.ac.kr/files/IP/IP2017/2014_Integer%20Prog_Conforti-Cornuejols-Zambelli.pdf)*
-- Korte, B., and Vygen, J. (2006), *[Combinatorial Optimization: Theory and Algorithms](https://www.mathematik.uni-muenchen.de/~kpanagio/KombOpt/book.pdf)*
-- Cormen, T. H., Leiserson, C. E., Rivest, R. L., and Stein, C. (2009), *[Introduction to Algorithms](https://edutechlearners.com/download/Introduction_to_algorithms-3rd%20Edition.pdf)*
+- Conforti, M., Cornuéjols, G., and Zambelli, G. (2014), *Integer Programming*
+- Korte, B., and Vygen, J. (2006), *Combinatorial Optimization: Theory and Algorithms*
+- Cormen, T. H., Leiserson, C. E., Rivest, R. L., and Stein, C. (2009), *[Introduction to Algorithms](https://www.cs.mcgill.ca/~akroit/math/compsci/Cormen%20Introduction%20to%20Algorithms.pdf)*
 
 ### Visualization
 
