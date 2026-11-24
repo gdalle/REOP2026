@@ -31,23 +31,41 @@
 
 = Homework
 
-_Exercise: Dynamic programming for the knapsack problem_
+_Exercise: Prove that min cut is the dual of max flow._
 
-_The knapsack problem consists in filling a bag by choosing from a set of items $i in {1, ..., n}$ with weights $w_i$ and prices $p_i$. Its decision version asks whether there is a subset with total weight $<= W_max$ but total price $>= P_min$.
-Propose a dynamic programming algorithm to compute the value function_
-$ P(n, W) = "maximum price for a bag of weight" <= W "with the" n "first items" $
-_Is it enough to prove that the knapsack problem is in $bold(P)$?_
+We can formulate the maximum flow problem as follows:
 
-_Exercise (Meunier - PL6): Computing sums of order statistics_
+$
+   max_x & quad sum_(a in delta^+(s)) x_a - sum_(a in delta^-(s)) x_a \
+  "s.t." & quad sum_(a in delta^-(v)) x_a = sum_(a in delta^+(v)) x_a quad quad forall v in V without {s, t} \
+         & quad 0 <= x_a <= u(a) quad quad forall a in A
+$
 
-_For any vector $x in RR^n$, we denote by $x^([i])$ the $i$-th largest element of the set ${x_1, ..., x_n}$. For instance, $x^([1])$ is the largest component of $x$, and $x^([n])$ is the smallest._
+We will prove the following result later in the course:
+The equivalent max-flow formulation
 
-+ _Let $A in RR^(m times n)$ and $b in RR^m$. We fix an integer $k in [n]$. Show that the problem_ $ min sum_(i=1)^k x^([i]) quad "s.t." quad A x = b, x in RR_+^n $ _can be formulated as a Linear Program. Hint: introduce one constraint per subset $S subset [n]$ of size $k$._
-+ _(Harder) Show that there is a formulation with at most $m+n$ constraints._
+$
+  max_(x >= 0, q) & quad q \
+           "s.t." & quad sum_(a in delta^+(s)) x_a - sum_(a in delta^-(s)) x_a = q \
+                  & quad sum_(a in delta^+(t)) x_a - sum_(a in delta^-(t)) x_a = -q \
+                  & quad sum_(a in delta^-(v)) x_a = sum_(a in delta^+(v)) x_a quad quad forall v in V without {s, t} \
+                  & quad x <= u
+$
 
-= Modeling with linear functions and integrality constraints
+has the following dual
 
-== Mixed Integer Linear Programs and their relaxations
+$
+  min_(y, z) & quad sum_a u_a z_a \
+      "s.t." & quad z_a >= y_v - y_w quad quad forall a = (v, w) in A \
+             & quad y_s - y_t >= 1 \
+             & quad z_a >= 0 quad quad forall a in A
+$
+
+where $z_a = 1$ if we select an edge in the cut and $y_v = 1$ if $v in S$. Using binary variables, the first inequality forces $a$ to be in the cut if $v$ and $w$ are in separate connected components.
+
+= Mixed Integer Linear Programs
+
+== The notion of relaxation
 
 A MILP is an LP where some variables are forced to take integer values:
 
@@ -74,19 +92,7 @@ Examples:
 
 If $x$ is a solution of (P), then it is a solution of (R). As a consequence, $op("sol")(P) subset op("sol")(R)$ and $op("val")(P) >= op("val")(R)$ (because taking the infimum over a smaller set leads to a larger value).
 
-Complexity:
-
-- LPs are easy to solve, even in very high dimension
-- MILPs are hard to solve, they require solving a large number of associated LPs
-
-_Exercise (Meunier - PL11): Basic principle of column generation_
-
-_Let $(P)$ be the linear program_
-$ min c^top x quad "s.t." quad A x = b, x in RR_+^n $
-_We suppose that $n$ is very large. Let $I subset [n]$, we consider the program $(P^I)$:_
-$ min c_I^top x' quad "s.t." quad A x' = b, x' in RR_+^I $
-_We denote by $(D)$ and $(D^I)$ the respective dual problems of $(P)$ and $(P^I)$.
-Let $tilde(y)$ be an optimal solution of $(D^I)$. Show that if $tilde(y)$ is also a feasible solution to $(D)$, then the optimal value of $(P^I)$ is the same as the optimal value of $(P)$._
+== Naive ideas
 
 Why can't we just solve the relaxation and round the solution to the nearest integer?
 
@@ -94,27 +100,27 @@ Why can't we just solve the relaxation and round the solution to the nearest int
 - Sometimes none of the closest integer solutions are feasible
 - There can be an arbitrary gap between the value of (R) and the value of (P)
 
-_Exercise (Meunier, PL12): 2-approximation of VERTEX COVER with an LP_
+Naive approach:
 
-+ _Find a MILP formulation for the minimum vertex cover problem_
-+ _Propose a way to build a vertex cover from a solution to the linear relaxation of the previous MILP._
-+ _Prove that the solution you obtain is at most twice as large as the minimum vertex cover._
++ Enumerate all possible assignments of integer variables
++ For each of them, solve the resulting LP
++ Pick the best solution
 
-== Concrete examples
+Unfortunately, this is very inefficient.
+
+== Modeling examples
 
 See _Model Building in Mathematical Programming_ by H. Paul Williams (2013) for very useful tricks in model building.
 
-=== Dispatching patients during a pandemic
+_Exercise: Given binary variables modeling individual propositions, express the following logical constructs: and, or, implication, equivalence, at most one, exactly two._
 
-Consider a set of $H$ hospitals with reanimation capacity $r_h$ and initial patient load $p_h$. An excess patient in $h$ costs $e_h$, and a patient transfer from $h_1$ to $h_2$ costs $t_(h_1 h_2)$. Formulate a MILP to optimize patient dispatch.
+_Exercise: Let $x in {0, 1}$ and $y in [0, M]$. Show that the constraint $z = x y$ can be linearized (McCormick linearization)._
 
-=== The power of logical variables
+_Exercise: Consider a set of $H$ hospitals with reanimation capacity $r_h$ and initial patient load $p_h$. An excess patient in $h$ costs $e_h$, and a patient transfer from $h_1$ to $h_2$ costs $t_(h_1 h_2)$. Formulate a MILP to optimize patient dispatch._
 
-_Exercise 10.4_
+_Exercise: Model facility location as a MILP._
 
-_Exercise 10.5_
-
-= Integral polyhedra
+= Total unimodularity
 
 == When MILPs become easy to solve
 
@@ -129,35 +135,21 @@ This implies that solving a MILP is just as easy as solving its continuous relax
 
 A matrix $A$ is Totally Unimodular (TU) if the determinant of all its square submatrices (obtained by removing rows and/or columns) is in ${-1, 0, 1}$. In particular, all of its coefficients must be in ${-1, 0, 1}$ too.
 
-*Theorem 9.8 - variant* (Importance of TU matrices): If $A$ is TU and $b in ZZ^m$, then $P = {A x = b, x >= 0}$ is integral.
+*Theorem* (Importance of TU matrices): If $A$ is TU and $b in ZZ^m$, then $P = {A x = b, x >= 0}$ is integral.
 
 _Proof:_ For any vertex $x$ of $P$, there is a basis $B$ such that $x$ is the basic feasible solution associated with $B$. This implies that $x_N = 0$ and $x_B = A_B^(-1) b >= 0$. Since $A$ is TU and $A_B$ is invertible, the determinant of $A_B$ is in ${-1, 1}$. By the comatrix formula, $A_B^(-1) = 1/(det A_B) op("com")(A_B)^top$, which means $A_B^(-1)$ has integer coefficients. Since $b$ does too, we conclude that $x in ZZ^n$.
 #h(1fr) $qed$
 
-*Proposition 9.10* (Poincaré criterion for TU): Let $A in {-1, 0, 1}^(m times n)$. If $A$ contains at most one $1$ and one $-1$ per column, then $A$ is TU.
+*Proposition* (Poincaré criterion for TU): Let $A in {-1, 0, 1}^(m times n)$. If $A$ contains at most one $1$ and one $-1$ per column, then $A$ is TU.
 
 _Proof:_ By recursion.
 #h(1fr) $qed$
 
-*Corollary 9.11* (Integrality of the flow polyhedron): The incidence matrix of a directed graph is TU.
+*Corollary* (Integrality of the flow polyhedron): The incidence matrix of a directed graph is TU.
 
 How to build new TU matrices? If $A$ is TU, then the following matrices are too: $A^top$, $-A$, $(A, plus.minus A)$, $(A, e_j)$, any matrix obtained multiplying a row or column of $A$ by $-1$.
 
-== Examples
-
-_Exercise (Meunier, PLNE1)_
-
-_Exercise (Meunier, PLNE6)_
-
 = Solution algorithms
-
-Naive approach:
-
-+ Enumerate all possible assignments of integer variables
-+ For each of them, solve the resulting LP
-+ Pick the best solution
-
-Unfortunately, this is very inefficient.
 
 == Branch & Bound
 
@@ -171,19 +163,19 @@ To avoid enumerating all possible assignments, we have pruning techniques:
 - Prune by optimality: If the relaxation at a node returns an integer solution, then we don't need to keep looking because we already know the best candidate in this region of the space.
 - Prune by bound (the most important): If the relaxation at a node has a value higher than the best solution found so far (in the whole tree), then we don't need to keep looking because no matter what we find in this region of the space, it will be worse than the best candidate we already have.
 
-_Exercise 10.3 (approximate B&B)_
+_Exercise: Modify the B&B algorithm to find a solution with cost at most $(1+g)%$ that of the optimum._
 
 Tuning Branch & Bound is often necessary, and commercial solvers include many complicated heuristics meant to speed up the search. Among the most important design choices, we can list:
 
 - Choice of the variable to branch on
 - Choice of the next node to explore
 
-_*Practical illustration in Julia*_
-
-_Open #link("https://gdalle.github.io/IntroJulia/notebooks/branch_bound.jl.html")[this webpage] and complete the code cells to manually apply B&B._
-
 Note that Branch & Bound is a general principle which applies beyond Integer Programming (see course notes for a more abstract formulation of the algorithm).
 
 == Cutting planes
+
+TBC
+
+== Primal heuristics
 
 TBC
