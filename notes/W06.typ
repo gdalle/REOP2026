@@ -113,7 +113,7 @@ _Exercise: Given binary variables modeling individual propositions, express the 
 
 _Exercise: Let $x in {0, 1}$ and $y in [0, M]$. Show that the constraint $z = x y$ can be linearized (McCormick linearization)._
 
-We replace it by the following constraints: $z >= 0, z <= y x, z >= y - M(1 - x)$.
+We replace it by the following constraints: $z >= 0, z <= y, z <= M x, z >= y - M(1 - x)$.
 
 _Exercise: Single-machine scheduling. We have a set of tasks $J$ to sequence on a single machine. Each task $j$ has a duration $tau_j$, a release time $r_j$ (after which it can start) and a deadline $d_j$ (before which it should be complete). We seek to minimize the sum of delays, formulate this as an MILP._
 
@@ -182,17 +182,6 @@ If these cuts preserve all integer solutions, they are called valid inequalities
 Finding valid inequalities for a given problem is a key way to speed up solving inside a "Branch & Cut" algorithm (used either at the root node, or at each node of the search tree).
 
 _Exercise: Given a set $I$ of clients to deliver, we need to decide where to build facilities among a set $J$ of candidate locations. Client $i$ has demand of $d_i$ items. Opening a facility at $j$ costs $f_j$, brings production capacity $q_j$, and allows sending items to client $i$ at unit cost $c_(i j)$. Give a compact MILP formulation of the minimum cost facility location problem._
-
-Compact formulation:
-
-$
-     min quad & sum_j f_j y_j + sum_i sum_j c_(i j) x_(i j) \
-  "s.t." quad & sum_j x_(i j) = d_i \
-              & sum_i x_(i j) <= Q_i y_i \
-              & x_i >= 0, y_j in {0, 1}
-$
-
-Valid inequality: transport on each edge is smaller than client demand.
 
 _Exercise: Suggest a valid inequality for the coloring problem._
 
