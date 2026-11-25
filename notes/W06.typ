@@ -41,7 +41,6 @@ $
          & quad 0 <= x_a <= u(a) quad quad forall a in A
 $
 
-We will prove the following result later in the course:
 The equivalent max-flow formulation
 
 $
@@ -110,15 +109,17 @@ Unfortunately, this is very inefficient.
 
 == Modeling examples
 
-See _Model Building in Mathematical Programming_ by H. Paul Williams (2013) for very useful tricks in model building.
-
 _Exercise: Given binary variables modeling individual propositions, express the following logical constructs: and, or, implication, equivalence, at most one, exactly two._
 
 _Exercise: Let $x in {0, 1}$ and $y in [0, M]$. Show that the constraint $z = x y$ can be linearized (McCormick linearization)._
 
-_Exercise: Consider a set of $H$ hospitals with reanimation capacity $r_h$ and initial patient load $p_h$. An excess patient in $h$ costs $e_h$, and a patient transfer from $h_1$ to $h_2$ costs $t_(h_1 h_2)$. Formulate a MILP to optimize patient dispatch._
+We replace it by the following constraints: $z >= 0, z <= y x, z >= y - M(1 - x)$.
 
-_Exercise: Model facility location as a MILP._
+_Exercise: Single-machine scheduling. We have a set of tasks $J$ to sequence on a single machine. Each task $j$ has a duration $tau_j$, a release time $r_j$ (after which it can start) and a deadline $d_j$ (before which it should be complete). We seek to minimize the sum of delays, formulate this as an MILP._
+
+Introduce continuous variables for the beginning and end of each task, as well as binary ones for the order between any pair of tasks.
+
+See _Model Building in Mathematical Programming_ (Williams, 2013) for more useful tricks.
 
 = Total unimodularity
 
@@ -151,6 +152,8 @@ How to build new TU matrices? If $A$ is TU, then the following matrices are too:
 
 = Solution algorithms
 
+Never reimplement this by hand! There are commercial (Gurobi) and open-source (HiGHS) solvers doing this with decades of expertise.
+
 == Branch & Bound
 
 Branch & Bound speeds up enumeration by discarding useless cases. It is still exponentially slow in the worst case, but it works very well in practice.
@@ -174,8 +177,41 @@ Note that Branch & Bound is a general principle which applies beyond Integer Pro
 
 == Cutting planes
 
-TBC
+Linear relaxations can be strengthened by inserting cuts (additional constraints) which exclude fractional optima of the linear relaxation.
+If these cuts preserve all integer solutions, they are called valid inequalities.
+Finding valid inequalities for a given problem is a key way to speed up solving inside a "Branch & Cut" algorithm (used either at the root node, or at each node of the search tree).
 
-== Primal heuristics
+_Exercise: Given a set $I$ of clients to deliver, we need to decide where to build facilities among a set $J$ of candidate locations. Client $i$ has demand of $d_i$ items. Opening a facility at $j$ costs $f_j$, brings production capacity $q_j$, and allows sending items to client $i$ at unit cost $c_(i j)$. Give a compact MILP formulation of the minimum cost facility location problem._
 
-TBC
+Compact formulation:
+
+$
+     min quad & sum_j f_j y_j + sum_i sum_j c_(i j) x_(i j) \
+  "s.t." quad & sum_j x_(i j) = d_i \
+              & sum_i x_(i j) <= Q_i y_i \
+              & x_i >= 0, y_j in {0, 1}
+$
+
+Valid inequality: transport on each edge is smaller than client demand.
+
+_Exercise: Suggest a valid inequality for the coloring problem._
+
+No more than one vertex of a given color in each clique.
+There are exponentially many such inequalities.
+
+To decide which inequality must be added, a separation problem can be solved to find the most violated one among a given family. It must be an easy problem.
+
+= KIRO & course project
+
+Happening tomorrow, register at https://kiro.enpc.org/.
+That's your homework for the week ;)
+
+How to tackle an OR challenge:
+
+- Standard problem: exact algorithm
+- Reasonably small MILP formulation: use off-the-shelf solver
+- Otherwise: (for now) metaheuristic
+- To be learned in M1/M2: decomposition techniques and other tricks to enhance solvers.
+
+Use the KIRO and course challenge to explore and understand what you're doing. This is a learning opportunity.
+LLMs are an option, not an obligation.

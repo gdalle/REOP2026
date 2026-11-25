@@ -10,6 +10,7 @@ Here you will find material specific to [Guillaume Dalle](https://gdalle.github.
 - Week 3: [Flows](notes/W03.pdf)
 - Week 4: [Spanning trees and complexity theory](notes/W04.pdf)
 - Week 5: [Heuristics and linear programming](notes/W05.pdf)
+- Week 6: [Integer programming](notes/W06.pdf)
 
 ## Additional resources
 
